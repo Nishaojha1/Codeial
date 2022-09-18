@@ -8,6 +8,6 @@ router.get('/', homeController.home);
 router.use('/users', require('./users'));
 
 // for any futher routes, access from here
-// router.use('/routername', require('./routerfile));
+// router.use('/routername', require('./routerfile))
 
 module.exports = router;
