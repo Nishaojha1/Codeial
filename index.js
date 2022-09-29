@@ -5,6 +5,11 @@ const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 const db = require('./config/mongoose');
 const port = 8000;
+// used for session cookie
+const session = require('express-session');
+const passport = require('passport');
+const passportLocal =require('./config/passport-local-strategy');
+
 
 // reading through the post request
 app.use(express.urlencoded());
@@ -18,7 +23,7 @@ app.use(expressLayouts);
 app.set('layout extractStyles',true);
 app.set('layout extractScripts',true);
 
-// Set the template engine pug
+// Set the template engine ejs
 app.set('view engine','ejs');
 // set the view directory
 app.set('views', path.join(__dirname,'views'));
