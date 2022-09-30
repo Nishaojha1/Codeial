@@ -1,11 +1,8 @@
 const passport = require('passport');
 const User = require('../models/user');
 
-// telling passport tp use local strategy
-const LocalStrategy = reqyire('passport-local').Strategy;
-
-const User = require('../models/user');
-
+// telling passport to use local strategy
+const LocalStrategy = require('passport-local').Strategy;
 
 // create authentication function (we need passport to use this local strategy)
 passport.use(new LocalStrategy({
@@ -49,5 +46,25 @@ passport.deserializeUser(function(id, done){
         return done(null, user);    
     });
 });
+
+// check if the user is authenticated
+passport.checkAuthentication = function(req, res, next){
+    // this detects whether the user is signed in or not
+    // if the user is signed in then the pass on the req to the next function(controller's action)
+    if(req.isAuthenticated()){
+        return next();
+    }
+    // if the user is not signed in
+    return res.redirect('/users/sign-in');
+}
+
+passport.setAuthenticatedUser = function(req, res, next){
+    if(req.isAuthenticated()){
+        // whenever a user is signed in that user's info is available in req.user
+        // req.user contains the current signed in user from the session cookie and we are just sending it to the locals for the views
+        res.locals.user = req.user;
+    }
+    next();
+}
 
 module.exports = passport;
