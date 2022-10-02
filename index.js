@@ -9,6 +9,8 @@ const port = 8000;
 const session = require('express-session');
 const passport = require('passport');
 const passportLocal =require('./config/passport-local-strategy');
+// since we need a session information to store that is why session argument is used
+const MongoStore = require('connect-mongo');
 
 
 // reading through the post request
@@ -29,6 +31,7 @@ app.set('view engine','ejs');
 app.set('views', path.join(__dirname,'views'));
 
 // Create a session
+// mongo store is used to store the session cookie in db
 app.use(session ({
     // name of my cookie is codeial
     name: 'codeial',
@@ -42,7 +45,18 @@ app.use(session ({
     // we need to give an age to the cookie, for how long should this be valid after that the session i.e. the cookie expires
     cookie: {
         maxAge: (1000* 60* 100)
-    }
+    },
+    // used to store the session cookie info into the db even if the server restarts the info doesnot get lost
+    store: MongoStore.create(
+        {
+            mongoUrl: 'mongodb://localhost/codeial_development',
+            mongooseConnection: db,
+            autoRemove: 'disabled'
+        },
+        function(err){
+            console.log(err || 'connect-mongodb setup ok');
+        }
+    )
 
 }));
 // to tell the app to use passport

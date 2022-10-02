@@ -22,7 +22,7 @@ function(email, password, done){
             // there is no error but user is not found since the authentication is not done so false
             return done(null, false);
         }
-
+        // user found
         return done(null, user);
    });
 }
@@ -34,7 +34,7 @@ passport.serializeUser(function(user, done){
     done(null, user.id);
 });
 
-// Deserializing the user from the key in the cookies
+// Deserializing the user from the key in the cookies(picking out id from the session cookie)
 
 passport.deserializeUser(function(id, done){
     User.findById(id, function(err, user){
@@ -52,12 +52,14 @@ passport.checkAuthentication = function(req, res, next){
     // this detects whether the user is signed in or not
     // if the user is signed in then the pass on the req to the next function(controller's action)
     if(req.isAuthenticated()){
+        // if the user is authenticated just return to the next function that is going to be called in line otherwise take it to the sign-in page
         return next();
     }
     // if the user is not signed in
     return res.redirect('/users/sign-in');
 }
 
+// to access the authenticated user
 passport.setAuthenticatedUser = function(req, res, next){
     if(req.isAuthenticated()){
         // whenever a user is signed in that user's info is available in req.user
