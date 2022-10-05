@@ -8,6 +8,8 @@ router.get('/', homeController.home);
 // middleware
 router.use('/users', require('./users'));
 
+router.use('/posts', require('./post'));
+
 // for any futher routes, access from here
 // router.use('/routername', require('./routerfile))
 
