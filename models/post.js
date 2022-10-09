@@ -1,14 +1,16 @@
 const mongoose = require('mongoose');
+const User = require('./user');
+
 
 const postSchema = new mongoose.Schema({
     content: {
         type: String,
         required: true
     },
-    user: {
-        // refering to the objectId of robo3T database
-        type: mongoose.Schema.Types.ObjectId,
+    user:{
+        type:  mongoose.Schema.Types.ObjectId,
         ref: 'User'
+
     }
 },{
     timestamps: true
