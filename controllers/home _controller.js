@@ -1,4 +1,8 @@
 const Post = require('../models/post');
+const User = require('../models/user');
+
+
+
 // export a function which is publically available to route's file that should return something
 module.exports.home = function(req,res){
     // console.log(req.cookies);
@@ -20,10 +24,15 @@ module.exports.home = function(req,res){
         }
     })
     .exec(function(err, post){
-        return res.render('home', {
-            title: 'Codeial | Home',
-            posts: post,
-            });  
-     
-    })
-}
+
+        User.find({}, function(err, users){
+            // console.log(users);
+            return res.render('home', {
+                title: 'Codeial | Home',
+                posts: post,
+                all_users: users
+                });  
+            });
+
+        })
+    }

@@ -3,10 +3,15 @@ const User = require('../models/user');
 
 // export a function which is publically available to route's file that should return something
 module.exports.profile = function(req,res){
-    return res.render('user_profile', {
-        title: 'profile'
+    User.findById(req.params.id, function(err, user){
+        console.log(user);
+        return res.render('user_profile', {
+            title: 'profile',
+            profile_user: user
+        });
+
     });
-};
+}
 
 // render the sign up page
 module.exports.signup = function(req,res){
