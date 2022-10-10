@@ -14,11 +14,19 @@
         <ul>
             <% for (post of posts){ %>
                 <li>
-                    <%= post.content %> <br>
-                    <small>
-                        <!-- populated -->
-                        <%= post.user.name %>
-                    </small>
+                    <p>
+                        <!-- if the user is signed in and the signed in user id = post.user.id the it show delete  -->
+                        <% if(locals.user && locals.user.id == post.user.id){ %>
+                        <small>
+                            <a href="/posts/destroy/<%= post.id %>">del</a>
+                        </small>
+                        <% } %>
+                        <%= post.content %> <br>
+                        <small>
+                            <!-- populated -->
+                            <%= post.user.name %>
+                        </small>
+                    </p>
 
                     <div class="post-comments">
                         <% if(locals.user){ %>
@@ -35,6 +43,12 @@
 
 
                                 <p>
+                                    <% if(locals.user && locals.user.id == comment.user.id){ %>
+                                        <small>
+                                            <a href="/comments/destroy/<%= comment.id %>">del</a>
+                                        </small>
+                                    <% } %>
+
                                     <%= comment.content %>
                                     <br>
                                     <small>
