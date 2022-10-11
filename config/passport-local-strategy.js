@@ -6,19 +6,23 @@ const LocalStrategy = require('passport-local').Strategy;
 
 // create authentication function (we need passport to use this local strategy)
 passport.use(new LocalStrategy({
-    usernameField: 'email'
+    usernameField: 'email',
+    // this basically allows us to the first arg as request, so that  if the user is not found instead of showing error in the console we can use our custom middleware to flash our message
+    passReqToCallback: true
 },
 // whenever this local strategy is being called the email and the password will be passed on and a done function will be passed on done is call back function which is reporting to passport.js
-function(email, password, done){
+function(req, email, password, done){
     // find a user and establish the identity
     User.findOne({email: email}, function(err, user){
         if(err){
-            console.log('Error in finding user --> Passport');
+            req.flash('error', err);
+            // console.log('Error in finding user --> Passport');
             return done('err');
         }
 
         if(!user || user.password != password){
-            console.log('Invalid Username/Password');
+            req.flash('error', 'Invalid Username/Password');
+            // console.log('Invalid Username/Password');
             // there is no error but user is not found since the authentication is not done so false
             return done(null, false);
         }

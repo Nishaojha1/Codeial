@@ -70,7 +70,8 @@ module.exports.create = function(req, res){
 
 // get sign-in data
 module.exports.createSession = function(req, res){
-    // assumeing user is already signed in so we need to redirect
+    req.flash('success','Logged in Successfully')
+    // assuming user is already signed in so we need to redirect
     return res.redirect('/');
 }
 
@@ -79,5 +80,6 @@ module.exports.destroySession = function(req, res, next){
     req.logout(function(err){
         return next(err);
     });
+    req.flash('success', 'You have logged out');
     return res.redirect('/')
 }

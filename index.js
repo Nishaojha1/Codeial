@@ -13,6 +13,9 @@ const passportLocal =require('./config/passport-local-strategy');
 const MongoStore = require('connect-mongo');
 // connecting SASS
 const sassMiddleware = require('node-sass-middleware');
+// setup connect-flash
+const flash = require('connect-flash');
+const customMiddleware = require('./config/middleware');
 
 app.use(sassMiddleware({
     src: './assets/scss',
@@ -73,6 +76,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(passport.setAuthenticatedUser);
+
+// we need to use it after the sesson cookie since express session middleware is being used, Flash messages will be setup the cookies which stores the session information
+app.use(flash());
+app.use(customMiddleware.setFlash);
 
 // use express router
 app.use('/', require('./routes'));

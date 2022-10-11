@@ -4,8 +4,9 @@ const User = require('../models/user');
 
 
 // export a function which is publically available to route's file that should return something
-module.exports.home = function(req,res){
-    // console.log(req.cookies);
+module.exports.home = async function(req,res){
+    try{
+            // console.log(req.cookies);
     // to change the value of cookies in the server side
     // res.cookie('user_id', 24);
     // Post.find({}, function(err, post){
@@ -15,24 +16,26 @@ module.exports.home = function(req,res){
     //     });  
     // });
     // finding all the posts and populating user of each post
-    Post.find({})
-    .populate('user')
-    .populate({
-        path: 'comments' ,
-        populate: {
-            path: 'user'
-        }
-    })
-    .exec(function(err, post){
-
-        User.find({}, function(err, users){
-            // console.log(users);
-            return res.render('home', {
-                title: 'Codeial | Home',
-                posts: post,
-                all_users: users
-                });  
-            });
-
+        let posts = await Post.find({})
+        .populate('user')
+        .populate({
+            path: 'comments' ,
+            populate: {
+                path: 'user'
+            }
         })
+    let users =  await User.find({});
+    
+        // console.log(users);
+        return res.render('home', {
+            title: 'Codeial | Home',
+            posts: posts,
+            all_users: users
+            });   
+    
+    }catch(err){
+        console.log ('Error', err);
+        return;
     }
+
+ }
