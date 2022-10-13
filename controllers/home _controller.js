@@ -17,6 +17,8 @@ module.exports.home = async function(req,res){
     // });
     // finding all the posts and populating user of each post
         let posts = await Post.find({})
+        // to show the post in the reverse chronological order
+        .sort('-createdAt')
         .populate('user')
         .populate({
             path: 'comments' ,
