@@ -1,5 +1,6 @@
 const User = require('../models/user');
-
+const fs = require('fs');
+const path = require('path');
 
 // export a function which is publically available to route's file that should return something
 module.exports.profile = function(req,res){
@@ -35,6 +36,10 @@ module.exports.update = async function(req, res){
 
                 // it will check if the user is not uploading a file then we are going to update only when the user will do it
                 if(req.file){
+                    if(user.avatar){
+                        // delete the avatar for which we need file system and also the path module
+                        fs.unlinkSync(path.join(__dirname, '..', user.avatar));
+                    }
                     // this is saving the path of the uploaded file into the avatar feild in the user
                     user.avatar = User.avatarPath + '/' + req.file.filename
                 }

@@ -29,9 +29,11 @@ app.use(sassMiddleware({
 app.use(express.urlencoded());
 
 // setting up the cookie parser
-app.use(cookieParser())
+app.use(cookieParser());
 
 app.use(express.static('./assets'));
+// directory of index joined with uploads which means codeial/uploads will be available in this path to th browser
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use(expressLayouts);
 // extract style and scripts from sub pages into the layout
 app.set('layout extractStyles',true);
