@@ -24,7 +24,7 @@ module.exports.destroy = async function(req, res){
     let post = await Post.findById(req.params.id);
     // Need to check whether the user who is deleting the post is the user who has written the post
     // .id means converting the object id into string
-    // if(post.user == req.user.id){
+    if(post.user == req.user.id){
         post.remove();
 
 
@@ -34,7 +34,15 @@ module.exports.destroy = async function(req, res){
         return res.json(200, {
             message: "Post associates and comments deleted successfully!"
         });
-        // return res.redirect('back');
+
+    }else{
+
+         return res.json(401, 
+            {
+                message:'you cannot delete the post'
+            });  
+    }
+        
    
 
     }catch(err){
