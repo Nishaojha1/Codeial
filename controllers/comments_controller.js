@@ -1,32 +1,71 @@
-const Comment = require('../models/comment');
-const Post = require('../models/post');
+const Comment= require('../models/comment');
+const Post= require('../models/post');
+const { post } = require('../routes/comments');
+const commentsMailer= require('../mailers/comments_mailer');
+//changes done for code Activity Solution
+const User = require('../models/user');
+// const queue=require('../config/kue');
+// const commentEmailWorker= require('../workers/comment_email_worker');
+// module.exports.create= function(req,res){
+//     Post.findById(req.body.post,function(err,post){
+//         if(post){
+//             Comment.create({ 
+//                 content:req.body.content,
+//                 post:req.body.post,
+//                 user:req.user._id,
+//             },function(err,comment){
+//                 //handle error
+//                 post.comments.push(comment);
+//                 post.save();
+//                 return res.redirect('/');
+//             })
+//         }
+//     });   
+// }
+//using async await
+module.exports.create=async function(req,res){
+    try{
+        let post=await Post.findById(req.body.post);
+        post=await post.populate([{path:'comments'},]);
+        
 
-module.exports.create = async function(req, res){
-    try {
-        // find the post with post id first and then create a comment
-        let post = await Post.findById(req.body.post)
-        if(post){
-            let comment = await Comment.create({
-                content: req.body.content,
-                post: req.body.post,
-                user: req.user._id
+        
+    if(post){
+        let comment=await Comment.create({ 
+            content:req.body.content,
+            user:req.user._id,
+            post:req.body.post,
+            
+        });
+        comment= await comment.populate([{path: 'user'}]);
+        post.comments.push(comment);
+        post.save();
+        
+        // comment = await comment.populate('user', 'name email').execPopulate();
+        commentsMailer.newComment(comment);
+        // let job=queue.create('emails',comment).save(function(err){
+        //     if(err){console.log('Error in creating a queue',job.id);
+        //     return;}
+        //     console.log('Job enqueued',job.id);
+        // });
+        
+        if(req.xhr){
+            return res.status(200).json({
+                data:{
+                    comment:comment
+                },
+                message:'comment created',
             });
-                // handle error
-
-                // adding comment to the post
-                post.comments.push(comment);
-                // save tells the db that tis is the final version so block it and save this before that its just in the RAM
-                post.save();
-                req.flash('success', 'comment added');
-
-                res.redirect('/');   
-            }
-    } catch (err) {
-        req.flash('error', err);
+        }
+        
+        return res.redirect('/');
+    }   
+    }catch(err){
+        console.log('Error',err);
         return;
     }
+    
 }
-
 module.exports.destroy = async function(req, res){
     try {
         let comment = await Comment.findById(req.params.id);
