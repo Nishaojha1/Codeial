@@ -1,22 +1,19 @@
 <header>
-    <p> Codeial </p>
-    <ul>
-        <% if (locals.user){ %>
-            <li><%= user.name %></li>
-            <li>
-                <a href="/users/sign-out">Sign Out</a>
-            </li>
+    <div id="codeial-logo"><a href="http://localhost:8000/" style="text-decoration: none; color: white;"> <h1> Codeial </h1></a></div>
+    <div class="navigation-icon">
+
+    <ul type="none">
+        <% if(locals.user){ %>
+            <div class="icon-container"><li><a href="/users/profile/<%= user.id %>"> <%= user.name %> </a></li> </div>
             
-
-        <% }else{ %>
-            <li>
-                <a href="/users/sign-in">Sign In</a>
-            </li>
-            <li>
-                <a href="/users/sign-up">Sign Up</a>
-            </li>
-
-        <% } %>
+           <div class="icon-container"> <li> <a href="/users/sign-out">Sign Out</a></li> </div>
+            <%} else { %>
+                
+                <div class="icon-container"><li> <a href="/users/sign-in">Sign In</a></li> </div>
+                <div class="icon-container"> <li><a href="/users/sign-up">Sign Up</a></li> </div>
+                <% } %>
 
     </ul>
+</div>
+    
 </header>

@@ -12,6 +12,7 @@ router.use('/posts', require('./post'));
 
 router.use('/comments',require('./comments'));
 
+router.use('/likes', require('./likes'));
 
 
 

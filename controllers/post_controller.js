@@ -1,5 +1,6 @@
 const Post = require('../models/post');
 const Comment = require('../models/comment');
+const Like = require('../models/like');
 
 // this is going tp control multiple users
 module.exports.post = function(req,res){
@@ -40,6 +41,11 @@ module.exports.destroy = async function(req, res){
     // Need to check whether the user who is deleting the post is the user who has written the post
     // .id means converting the object id into string
     if(post.user == req.user.id){
+
+        // delete the likes asoociated posts and all its comment's likes too
+        await Like.deleteMany({likeable: post, onModel: 'Post'});
+        await Like.deleteMany({_id: {$in: post.comments}});
+
         post.remove();
 
 
