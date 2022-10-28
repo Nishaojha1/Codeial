@@ -1,21 +1,10 @@
 const nodemailer = require('nodemailer');
 const ejs = require('ejs');
 const path = require('path');
+const env = require('./environment')
 
 // this part sends the email and tells how the communication is going to work 
-let transporter = nodemailer.createTransport({
-    service: 'gmail',
-    host: 'smtp.gmail.com',
-    // for TSL 
-    port: 587,
-    // we dont want 2 factor authentication
-    secure: false,
-    auth: {
-        user: 'its.nishaojha@gmail.com',
-        pass: 'kpakqawopeutdqcs',
-
-    }
-});
+let transporter = nodemailer.createTransport(env.smtp);
 
     // render template defines whenever  I try to send a HTML email where the file will be placed inside views and the mailers
 let renderTemplate = (data, relativePath) => {

@@ -1,0 +1,47 @@
+body #signIn_heading {
+  color: darkblue;
+  font-weight: bold;
+  margin-top: 7rem;
+  margin-left: 42%; }
+
+body .signIn_container {
+  margin-left: -4rem;
+  min-height: 40%;
+  margin-top: 1.3rem; }
+  body .signIn_container #email_container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 4rem;
+    display: block; }
+    body .signIn_container #email_container input {
+      width: 15rem;
+      height: 1.7rem; }
+  body .signIn_container #password_container {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    margin-left: 4rem;
+    display: block; }
+    body .signIn_container #password_container input {
+      width: 15rem;
+      height: 1.7rem; }
+  body .signIn_container #submit_button {
+    box-shadow: 0px 0px 6px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 45px;
+    width: 5.5rem;
+    height: 2rem;
+    margin-left: 3rem; }
+  body .signIn_container #submit_button:hover {
+    transform: translateY(-7px);
+    background-color: #2EE59D;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    letter-spacing: 1.5px; }
+  body .signIn_container p {
+    margin-top: 2rem;
+    margin-left: 3rem; }
+    body .signIn_container p #googleAuth_signIn {
+      color: blue;
+      text-decoration: none; }
+    body .signIn_container p a:hover {
+      font-size: large; }

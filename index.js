@@ -1,5 +1,11 @@
- const express = require('express');
- const cookieParser = require('cookie-parser');
+const express = require('express');
+const env = require('./config/environment');
+
+// for logging purpose
+const morgan = require('morgan');
+const rfs = require('rotating-file-stream');
+
+const cookieParser = require('cookie-parser');
 const app = express();
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
@@ -28,24 +34,34 @@ const chatSockets = require('./config/chat_sockets').chatSockets(chatServer);
 chatServer.listen(5000);
 console.log ('chat server is listening on port 5000')
 
+const { dir } = require('console');
+const { dirname } = require('path');
 
-app.use(sassMiddleware({
-    src: './assets/scss',
-    dest: './assets/css',
-    debug: true,
-    outputStyle: 'extended',
-    // where should my server look out for css file
-    prefix: '/css'
-}));
+if(env.name == 'development'){
+    app.use(sassMiddleware({
+        src: path.join(__dirname, env.asset_path, 'scss'),
+        dest: path.join(__dirname, env.asset_path, 'css'),
+        debug: true,
+        outputStyle: 'extended',
+        // where should my server look out for css file
+        prefix: '/css'
+    }));
+}
+
 // reading through the post request
 app.use(express.urlencoded());
 
 // setting up the cookie parser
 app.use(cookieParser());
 
-app.use(express.static('./assets'));
+app.use(express.static(env.asset_path));
 // directory of index joined with uploads which means codeial/uploads will be available in this path to th browser
-app.use('/uploads', express.static(__dirname + '/uploads'))
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
+
+// setup the logger
+app.use(morgan(env.morgan.mode, env.morgan.options));
+
 app.use(expressLayouts);
 // extract style and scripts from sub pages into the layout
 app.set('layout extractStyles',true);
@@ -63,7 +79,7 @@ app.use(session ({
     name: 'codeial',
     // (whenever encryption happens there is a key to encode and decode so to encode it we will use a key secret)
     // Todo change the secret before deployment in poduction mode
-    secret: 'blahhhsomething',
+    secret: env.session_cookie_key,
     // the user has not logged in, identity is not established, in that case do we need to add extra data to store in session cookies so we set it to false(if no)
     saveUninitialized: false,
     // if already a user_id is stored in the cookie we dont need to save again and again
